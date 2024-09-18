@@ -74,7 +74,7 @@ class ShoppingCartItems {
       totalCost =
         totalCost +
         this.cartItems[i].product_price * this.cartItems[i].product_quantity;
-      DISPLAY_CART_TOTAL.textContent = totalCost;
+      DISPLAY_CART_TOTAL.textContent = formatToNaira(totalCost);
     }
     return totalCost;
   }
@@ -91,10 +91,12 @@ class ShoppingCartItems {
               <img
                 src=${this.cartItems[i].product_image}
                 alt="product image"
-                class="w-40 rounded-md"
+                class="w-20 lg:w-40 rounded-md"
               /> 
               <div>
-                <h2 class="font-bold text-3xl">${this.cartItems[i].product_name}</h2>
+                <h2 class="font-bold text-base md:text-3xl">${
+                  this.cartItems[i].product_name
+                }</h2>
                 <button
                   class="delete__item bg-red-500 text-white font-semibold p-2 rounded-md mt-2"
                   id=${this.cartItems[i].product_id}
@@ -105,14 +107,18 @@ class ShoppingCartItems {
             </div>
 
             <div class="text-center">
-              <p class="font-bold text-xl">${this.cartItems[i].product_price}</p>
+              <p class=" text-gray text-base md:text-lg">${formatToNaira(
+                this.cartItems[i].product_price
+              )}</p>
               <button
                 class="increase__product__quantity bg-green-500 text-white text-lg font-semibold p-2 rounded-md mt-2"
                  id=${this.cartItems[i].product_id}  
                 >
                 +
               </button>
-              <span class="font-bold text-lg">${this.cartItems[i].product_quantity}</span>
+              <span class="font-bold text-lg">${
+                this.cartItems[i].product_quantity
+              }</span>
               <button
                 class="decrease__product__quantity bg-red-500 text-white text-lg font-semibold p-2 rounded-md mt-2"
                 id=${this.cartItems[i].product_id} 
@@ -213,4 +219,33 @@ CHECK_OUT_BTN.addEventListener("click", handleCheckOut);
 function handleCheckOut() {
   console.log(CustomerShoppingCart.cartItems);
   console.log(CustomerShoppingCart.calculateCartTotal());
+}
+
+function formatToNaira(amount, options = {}) {
+  const { useSymbol = true, decimalPlaces = 2, useGrouping = true } = options;
+
+  // Check if the input is a valid number
+  if (typeof amount !== "number" || isNaN(amount)) {
+    throw new Error("Invalid input. Please provide a valid number.");
+  }
+
+  // Format the number
+  const formatter = new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces,
+    useGrouping: useGrouping,
+  });
+
+  let formattedAmount = formatter.format(amount);
+
+  // Replace the currency symbol if needed
+  if (useSymbol) {
+    formattedAmount = formattedAmount.replace("NGN", "₦");
+  } else {
+    formattedAmount = formattedAmount.replace("₦", "NGN ");
+  }
+
+  return formattedAmount;
 }
