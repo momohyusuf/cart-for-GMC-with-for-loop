@@ -134,6 +134,7 @@ class ShoppingCartItems {
 
     if (product_to_display.length === 0) {
       CART_ITEMS_CONTAINER.innerHTML = `<h1 class="text-center text-3xl font-semibold">Cart is empty please add product 🥲🥲</h1>`;
+      DISPLAY_CART_TOTAL.textContent = formatToNaira(0);
       // DISPLAY_CART_TOTAL.textContent = 0;
       return;
     }
